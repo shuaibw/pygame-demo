@@ -72,6 +72,7 @@ class Bullets(pygame.sprite.Sprite):
             self.kill()
         if pygame.sprite.spritecollide(self, alien_group, True):
             self.kill()
+            explosion_group.add(Explosion(self.rect.centerx, self.rect.centery, "lg"))
 
 class Aliens(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -105,12 +106,47 @@ class AlienBullets(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
             spaceship.health_remaining -= 1
             self.kill()
+            explosion_group.add(Explosion(self.rect.centerx, self.rect.centery, "sm"))
+
+#create explosion
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self, x, y, size):
+        pygame.sprite.Sprite.__init__(self)
+        self.images = []
+        for num in range(1, 6):
+            img = pygame.image.load(f"img/exp{num}.png")
+            if size == "sm":
+                img = pygame.transform.scale(img, (20, 20))
+            if size == "lg":
+                img = pygame.transform.scale(img, (40, 40))
+            if size == "xl":
+                img = pygame.transform.scale(img, (150, 150))
+            self.images.append(img)
+            
+        self.index = 0
+        self.image = self.images[self.index]
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+        self.counter = 0
+        
+    def update(self):
+        explosion_speed = 3
+        self.counter += 1
+        
+        if self.counter >= explosion_speed and self.index < len(self.images) - 1:
+            self.counter = 0
+            self.index += 1
+            self.image = self.images[self.index]
+        
+        if self.index >= len(self.images) - 1 and self.counter >= explosion_speed:
+            self.kill()
 
 # sprite group
 spaceship_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 alien_group = pygame.sprite.Group()
 alien_bullet_group = pygame.sprite.Group()
+explosion_group = pygame.sprite.Group() 
 
 #create player
 spaceship = Spaceship(screen_width//2, screen_height - 100, 3)
@@ -152,12 +188,14 @@ while run:
     bullet_group.update()
     alien_group.update()
     alien_bullet_group.update()
+    explosion_group.update()
     
     # draw sprite group
     spaceship_group.draw(screen)
     bullet_group.draw(screen)
     alien_group.draw(screen)
     alien_bullet_group.draw(screen)
+    explosion_group.draw(screen)
 
     #update display window
     pygame.display.update()
