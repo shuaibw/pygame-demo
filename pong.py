@@ -14,6 +14,10 @@ pygame.display.set_caption("Pong")
 # Game exit flag
 done = False
 
+# Initial position of paddles
+paddle1_y = 200
+paddle2_y = 200
+
 while not done:
     # Event processing
     for event in pygame.event.get():
@@ -24,9 +28,8 @@ while not done:
 
     # Drawing code
     screen.fill(BLACK)
-    # Some example shapes
-    pygame.draw.rect(screen, WHITE, [50, 50, 20, 20])
-    pygame.draw.line(screen, WHITE, [100, 100], [150, 150], 5)
-    pygame.draw.circle(screen, WHITE, [60, 250], 40)
+    # Draw the paddle
+    pygame.draw.rect(screen, WHITE, [0, paddle1_y, 10, 100])
+    pygame.draw.rect(screen, WHITE, [690, paddle2_y, 10, 100])
 
     pygame.display.update()
