@@ -26,9 +26,9 @@ class Spaceship(pygame.sprite.Sprite):
     def update(self):
         speed = 8
         key = pygame.key.get_pressed()
-        if key[pygame.K_LEFT]:
+        if key[pygame.K_LEFT] and self.rect.left > 0:
             self.rect.x -= speed
-        if key[pygame.K_RIGHT]:
+        if key[pygame.K_RIGHT] and self.rect.right < screen_width:
             self.rect.x += speed
 
 # sprite group
