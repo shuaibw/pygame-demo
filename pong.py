@@ -59,10 +59,24 @@ while not done:
                 paddle2_vy = 0
 
     # Game logic
+    
+    # Paddle movement
     if 0 <= paddle1_y + paddle1_vy <= 400:
         paddle1_y += paddle1_vy
     if 0 <= paddle2_y + paddle2_vy <= 400:
         paddle2_y += paddle2_vy
+        
+    # Check ball collision against upper and lower walls
+    if 10 <= ball_y + ball_vy <= 490:
+        ball_y += ball_vy
+    else:
+        ball_vy *= -1
+
+    # Check ball collision against left and right walls
+    if 10 <= ball_x + ball_vx <= 690:
+        ball_x += ball_vx
+    else:
+        ball_vx *= -1
 
     # Drawing code
     screen.fill(BLACK)
