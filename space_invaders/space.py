@@ -1,4 +1,5 @@
 import pygame
+import random
 
 pygame.init()
 
@@ -11,6 +12,10 @@ screen_height = 800
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Space Invanders')
+
+# define game variables
+rows = 5
+cols = 5
 
 #define colours
 red = (255, 0, 0)
@@ -68,7 +73,8 @@ class Bullets(pygame.sprite.Sprite):
 class Aliens(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("img/alien1.png")
+        random_id = str(random.randint(1, 5))
+        self.image = pygame.image.load(f"img/alien{random_id}.png")
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
 
@@ -82,8 +88,11 @@ spaceship = Spaceship(screen_width//2, screen_height - 100, 3)
 spaceship_group.add(spaceship)
 
 #create aliens
-alien1 = Aliens(100, 100)
-alien_group.add(alien1)
+for row in range(rows):
+    for col in range(cols):
+        alien = Aliens(100 + col * 100, 100 + row * 70)
+        alien_group.add(alien)
+
 run = True
 while run:
 
