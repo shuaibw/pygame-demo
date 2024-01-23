@@ -22,6 +22,14 @@ class Spaceship(pygame.sprite.Sprite):
         self.image = pygame.image.load("img/spaceship.png")
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
+    
+    def update(self):
+        speed = 8
+        key = pygame.key.get_pressed()
+        if key[pygame.K_LEFT]:
+            self.rect.x -= speed
+        if key[pygame.K_RIGHT]:
+            self.rect.x += speed
 
 # sprite group
 spaceship_group = pygame.sprite.Group()
@@ -43,6 +51,8 @@ while run:
         if event.type == pygame.QUIT:
             run = False
             
+    # update spaceship
+    spaceship_group.update()
     
     # draw sprite group
     spaceship_group.draw(screen)
