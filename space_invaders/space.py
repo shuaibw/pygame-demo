@@ -37,6 +37,11 @@ class Spaceship(pygame.sprite.Sprite):
         if key[pygame.K_RIGHT] and self.rect.right < screen_width:
             self.rect.x += speed
             
+        # shoot bullets
+        if key[pygame.K_SPACE]:
+            bullet = Bullets(self.rect.centerx, self.rect.top)
+            bullet_group.add(bullet)
+            
         #draw health bar
         pygame.draw.rect(screen, red, [self.rect.x, (self.rect.bottom + 10), self.rect.width, 15])
         if self.health_remaining > 0:
@@ -44,8 +49,22 @@ class Spaceship(pygame.sprite.Sprite):
             remaining_width = int(self.rect.width * remaining_health_fraction)
             pygame.draw.rect(screen, green, [self.rect.x, (self.rect.bottom + 10), remaining_width, 15])
 
+# create bullet class
+class Bullets(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("img/bullet.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+        
+    def update(self):
+        self.rect.y -= 5
+        if self.rect.bottom < 0:
+            self.kill()
+
 # sprite group
 spaceship_group = pygame.sprite.Group()
+bullet_group = pygame.sprite.Group()
 
 
 #create player
@@ -67,8 +86,12 @@ while run:
     # update spaceship
     spaceship_group.update()
     
+    #update sprite groups
+    bullet_group.update()
+    
     # draw sprite group
     spaceship_group.draw(screen)
+    bullet_group.draw(screen)
 
     #update display window
     pygame.display.update()
