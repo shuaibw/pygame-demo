@@ -72,17 +72,33 @@ while not done:
         paddle1_y += paddle1_vy
     if 0 <= paddle2_y + paddle2_vy <= 400:
         paddle2_y += paddle2_vy
-        
+    
+    # Update ball position    
+    ball_x += ball_vx
+    ball_y += ball_vy
+    
+    # Check for scoring
+    if ball_x < 0:
+        score2 += 1
+        ball_x = 350
+        ball_y = 250
+        ball_vx = 6
+        ball_vy = 6
+    elif ball_x > 700:
+        score1 += 1
+        ball_x = 350
+        ball_y = 250
+        ball_vx = -6
+        ball_vy = -6
+    
     # Check ball collision against upper and lower walls
-    if 10 <= ball_y + ball_vy <= 490:
-        ball_y += ball_vy
-    else:
+    if ball_y < 10 or ball_y > 490:
         ball_vy *= -1
 
-    # Check ball collision against left and right walls
-    if 10 <= ball_x + ball_vx <= 690:
-        ball_x += ball_vx
-    else:
+    # Check ball collision against left and right paddles
+    if ball_x < 25 and paddle1_y <= ball_y <= paddle1_y + 100:
+        ball_vx *= -1
+    elif ball_x > 675 and paddle2_y <= ball_y <= paddle2_y + 100:
         ball_vx *= -1
 
     # Drawing code
