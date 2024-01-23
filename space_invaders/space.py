@@ -16,6 +16,7 @@ pygame.display.set_caption('Space Invanders')
 # define game variables
 rows = 5
 cols = 5
+last_alien_shot = pygame.time.get_ticks()
 
 #define colours
 red = (255, 0, 0)
@@ -86,11 +87,25 @@ class Aliens(pygame.sprite.Sprite):
         if abs(self.move_counter) > 75:
             self.current_direction *= -1
             self.move_counter*= -1
+            
+# Create alien bullet class
+class AlienBullets(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("img/alien_bullet.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+        
+    def update(self):
+        self.rect.y += 2
+        if self.rect.bottom > screen_height:
+            self.kill()
 
 # sprite group
 spaceship_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 alien_group = pygame.sprite.Group()
+alien_bullet_group = pygame.sprite.Group()
 
 #create player
 spaceship = Spaceship(screen_width//2, screen_height - 100, 3)
@@ -114,18 +129,30 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-            
+    
+    # create random alien bullets
+    current_time = pygame.time.get_ticks()
+    aliens_exist = len(alien_group.sprites()) > 0
+    num_alien_bullets = len(alien_bullet_group.sprites())
+    if current_time - last_alien_shot > 1000 and aliens_exist and num_alien_bullets < 5:
+        attacking_alien = random.choice(alien_group.sprites())
+        alien_bullet = AlienBullets(attacking_alien.rect.centerx, attacking_alien.rect.bottom)
+        alien_bullet_group.add(alien_bullet)
+        last_alien_shot = current_time
+    
     # update spaceship
     spaceship_group.update()
     
     #update sprite groups
     bullet_group.update()
     alien_group.update()
+    alien_bullet_group.update()
     
     # draw sprite group
     spaceship_group.draw(screen)
     bullet_group.draw(screen)
     alien_group.draw(screen)
+    alien_bullet_group.draw(screen)
 
     #update display window
     pygame.display.update()
