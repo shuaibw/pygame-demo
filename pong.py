@@ -33,6 +33,13 @@ ball_y = 250
 ball_vx = 6
 ball_vy = 6
 
+# initial score
+score1 = 0
+score2 = 0
+
+# define font
+font = pygame.font.Font(pygame.font.get_default_font(), 50)
+
 while not done:
     # Event processing
     for event in pygame.event.get():
@@ -90,6 +97,12 @@ while not done:
     
     # draw the ball
     pygame.draw.circle(screen, WHITE, [ball_x, ball_y], 10)
+    
+    # draw the scores
+    text1 = font.render(str(score1), 1, WHITE)
+    text2 = font.render(str(score2), 1, WHITE)
+    screen.blit(text1, (250, 10))
+    screen.blit(text2, (420, 10))
 
     pygame.display.update()
     clock.tick(60)
