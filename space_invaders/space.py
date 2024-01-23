@@ -65,14 +65,25 @@ class Bullets(pygame.sprite.Sprite):
         if self.rect.bottom < 0:
             self.kill()
 
+class Aliens(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("img/alien1.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+
 # sprite group
 spaceship_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
-
+alien_group = pygame.sprite.Group()
 
 #create player
 spaceship = Spaceship(screen_width//2, screen_height - 100, 3)
 spaceship_group.add(spaceship)
+
+#create aliens
+alien1 = Aliens(100, 100)
+alien_group.add(alien1)
 run = True
 while run:
 
@@ -95,6 +106,7 @@ while run:
     # draw sprite group
     spaceship_group.draw(screen)
     bullet_group.draw(screen)
+    alien_group.draw(screen)
 
     #update display window
     pygame.display.update()
