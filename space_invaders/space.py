@@ -29,6 +29,8 @@ laser_fx.set_volume(0.5)
 rows = 5
 cols = 5
 last_alien_shot = pygame.time.get_ticks()
+show_start = True
+game_over = 0 # 0 = not over, 1 = win, -1 = loss
 
 #define colours
 red = (255, 0, 0)
@@ -73,7 +75,6 @@ class Spaceship(pygame.sprite.Sprite):
         elif self.health_remaining <= 0:
             explosion_group.add(Explosion(self.rect.centerx, self.rect.centery, "xl"))
             self.kill()
-            pygame.quit()
 
 # create bullet class
 class Bullets(pygame.sprite.Sprite):
@@ -177,11 +178,18 @@ for row in range(rows):
         alien = Aliens(100 + col * 100, 100 + row * 70)
         alien_group.add(alien)
 
+def draw_text(text, text_col, x, y):
+    font = pygame.font.Font(None, 40)
+    img = font.render(text, True, text_col)
+    screen.blit(img, (x, y))
 run = True
 while run:
 
     clock.tick(fps)
-
+    
+    #update display window
+    pygame.display.update()
+    
     #draw background
     screen.blit(bg, (0,0))
 
@@ -189,7 +197,14 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-    
+        elif event.type == pygame.KEYDOWN:
+            if show_start and event.key == pygame.K_SPACE:
+                show_start = False
+                
+    if show_start:
+        draw_text("SPACE INVADERS", white, 180, screen_height//2 - 100)
+        draw_text("Press SPACE to start", white, 160, screen_height//2 + 50)
+        continue
     # create random alien bullets
     current_time = pygame.time.get_ticks()
     aliens_exist = len(alien_group.sprites()) > 0
@@ -215,8 +230,5 @@ while run:
     alien_group.draw(screen)
     alien_bullet_group.draw(screen)
     explosion_group.draw(screen)
-
-    #update display window
-    pygame.display.update()
     
 pygame.quit()
