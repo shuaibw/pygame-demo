@@ -51,8 +51,10 @@ while not done:
                 paddle2_vy = 0
 
     # Game logic
-    paddle1_y += paddle1_vy
-    paddle2_y += paddle2_vy
+    if 0 <= paddle1_y + paddle1_vy <= 400:
+        paddle1_y += paddle1_vy
+    if 0 <= paddle2_y + paddle2_vy <= 400:
+        paddle2_y += paddle2_vy
 
     # Drawing code
     screen.fill(BLACK)
