@@ -102,7 +102,7 @@ class AlienBullets(pygame.sprite.Sprite):
         self.rect.y += 2
         if self.rect.bottom > screen_height:
             self.kill()
-        if pygame.sprite.spritecollide(self, spaceship_group, False):
+        if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
             spaceship.health_remaining -= 1
             self.kill()
 
