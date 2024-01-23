@@ -25,6 +25,14 @@ paddle2_y = 200
 paddle1_vy = 0
 paddle2_vy = 0
 
+# Initial position of ball
+ball_x = 350
+ball_y = 250
+
+# Initial speed of ball
+ball_vx = 6
+ball_vy = 6
+
 while not done:
     # Event processing
     for event in pygame.event.get():
@@ -58,9 +66,16 @@ while not done:
 
     # Drawing code
     screen.fill(BLACK)
+    
     # Draw the paddle
     pygame.draw.rect(screen, WHITE, [0, paddle1_y, 10, 100])
     pygame.draw.rect(screen, WHITE, [690, paddle2_y, 10, 100])
+    
+    # draw the net
+    pygame.draw.line(screen, WHITE, [349, 0], [349, 500], 5)
+    
+    # draw the ball
+    pygame.draw.circle(screen, WHITE, [ball_x, ball_y], 10)
 
     pygame.display.update()
     clock.tick(60)
