@@ -16,8 +16,20 @@ pygame.display.set_caption('Space Invanders')
 #load image
 bg = pygame.image.load("img/bg.png")
 
+class Spaceship(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("img/spaceship.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+
+# sprite group
+spaceship_group = pygame.sprite.Group()
 
 
+#create player
+spaceship = Spaceship(screen_width//2, screen_height - 100)
+spaceship_group.add(spaceship)
 run = True
 while run:
 
@@ -30,6 +42,10 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+            
+    
+    # draw sprite group
+    spaceship_group.draw(screen)
 
     #update display window
     pygame.display.update()
