@@ -71,7 +71,7 @@ class Bullets(pygame.sprite.Sprite):
         if self.rect.bottom < 0:
             self.kill()
         if pygame.sprite.spritecollide(self, alien_group, True):
-            pass
+            self.kill()
 
 class Aliens(pygame.sprite.Sprite):
     def __init__(self, x, y):
