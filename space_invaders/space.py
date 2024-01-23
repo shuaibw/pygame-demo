@@ -1,7 +1,9 @@
 import pygame
+from pygame import mixer
 import random
 
 pygame.init()
+mixer.init()
 
 #define fps
 clock = pygame.time.Clock()
@@ -12,6 +14,16 @@ screen_height = 800
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Space Invanders')
+
+#load sounds
+explosion_fx = pygame.mixer.Sound("img/explosion.wav")
+explosion_fx.set_volume(0.5)
+
+explosion2_fx = pygame.mixer.Sound("img/explosion2.wav")
+explosion2_fx.set_volume(0.5)
+
+laser_fx = pygame.mixer.Sound("img/laser.wav")
+laser_fx.set_volume(0.5)
 
 # define game variables
 rows = 5
@@ -47,6 +59,7 @@ class Spaceship(pygame.sprite.Sprite):
         # shoot bullets
         time_now = pygame.time.get_ticks()
         if key[pygame.K_SPACE] and time_now - self.last_shot > 500:
+            laser_fx.play()
             bullet = Bullets(self.rect.centerx, self.rect.top)
             bullet_group.add(bullet)
             self.last_shot = time_now
@@ -57,6 +70,10 @@ class Spaceship(pygame.sprite.Sprite):
             remaining_health_fraction = self.health_remaining / self.health_start
             remaining_width = int(self.rect.width * remaining_health_fraction)
             pygame.draw.rect(screen, green, [self.rect.x, (self.rect.bottom + 10), remaining_width, 15])
+        elif self.health_remaining <= 0:
+            explosion_group.add(Explosion(self.rect.centerx, self.rect.centery, "xl"))
+            self.kill()
+            pygame.quit()
 
 # create bullet class
 class Bullets(pygame.sprite.Sprite):
@@ -72,6 +89,7 @@ class Bullets(pygame.sprite.Sprite):
             self.kill()
         if pygame.sprite.spritecollide(self, alien_group, True):
             self.kill()
+            explosion_fx.play()
             explosion_group.add(Explosion(self.rect.centerx, self.rect.centery, "lg"))
 
 class Aliens(pygame.sprite.Sprite):
@@ -106,6 +124,7 @@ class AlienBullets(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, spaceship_group, False, pygame.sprite.collide_mask):
             spaceship.health_remaining -= 1
             self.kill()
+            explosion2_fx.play()
             explosion_group.add(Explosion(self.rect.centerx, self.rect.centery, "sm"))
 
 #create explosion
