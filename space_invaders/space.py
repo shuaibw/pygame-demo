@@ -28,6 +28,7 @@ class Spaceship(pygame.sprite.Sprite):
         self.rect.center = [x, y]
         self.health_start = health
         self.health_remaining = health
+        self.last_shot = pygame.time.get_ticks()
     
     def update(self):
         speed = 8
@@ -38,9 +39,11 @@ class Spaceship(pygame.sprite.Sprite):
             self.rect.x += speed
             
         # shoot bullets
-        if key[pygame.K_SPACE]:
+        time_now = pygame.time.get_ticks()
+        if key[pygame.K_SPACE] and time_now - self.last_shot > 500:
             bullet = Bullets(self.rect.centerx, self.rect.top)
             bullet_group.add(bullet)
+            self.last_shot = time_now
             
         #draw health bar
         pygame.draw.rect(screen, red, [self.rect.x, (self.rect.bottom + 10), self.rect.width, 15])
