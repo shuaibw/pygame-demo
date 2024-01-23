@@ -12,16 +12,22 @@ screen_height = 800
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Space Invanders')
 
+#define colours
+red = (255, 0, 0)
+green = (0, 255, 0)
+white = (255, 255, 255)
 
 #load image
 bg = pygame.image.load("img/bg.png")
 
 class Spaceship(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, health):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("img/spaceship.png")
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
+        self.health_start = health
+        self.health_remaining = health
     
     def update(self):
         speed = 8
@@ -30,13 +36,20 @@ class Spaceship(pygame.sprite.Sprite):
             self.rect.x -= speed
         if key[pygame.K_RIGHT] and self.rect.right < screen_width:
             self.rect.x += speed
+            
+        #draw health bar
+        pygame.draw.rect(screen, red, [self.rect.x, (self.rect.bottom + 10), self.rect.width, 15])
+        if self.health_remaining > 0:
+            remaining_health_fraction = self.health_remaining / self.health_start
+            remaining_width = int(self.rect.width * remaining_health_fraction)
+            pygame.draw.rect(screen, green, [self.rect.x, (self.rect.bottom + 10), remaining_width, 15])
 
 # sprite group
 spaceship_group = pygame.sprite.Group()
 
 
 #create player
-spaceship = Spaceship(screen_width//2, screen_height - 100)
+spaceship = Spaceship(screen_width//2, screen_height - 100, 3)
 spaceship_group.add(spaceship)
 run = True
 while run:
